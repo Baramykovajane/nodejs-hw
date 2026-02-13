@@ -44,27 +44,21 @@ app.get('/notes/:noteId', (req, res) => {
 });
 
 // Тестовий маршрут помилки
-app.get('/test-error', (req, res) => {
+app.get('/test-error', (_req, _res) => {
   throw new Error('Simulated server error');
 });
 
 // Middleware 404 (після всіх маршрутів)
-app.use((req, res) => {
+app.use((_req, res) => {
  res.status(404).json({ message: 'Route not found' });
 });
 
 
 // Middleware для обробки помилок
-app.use((err, req, res, next) => {
-  console.error(err);
+app.use((error, req, res, next) => {
+  console.error(error);
 
-  const isProd = process.env.NODE_ENV === "production";
-
-  res.status(500).json({
-    message: isProd
-      ? "Something went wrong. Please try again later."
-      : err.message,
-  });
+  res.status(500).json({ message: 'Something went wrong. Please try again later.' });
 });
 
 
