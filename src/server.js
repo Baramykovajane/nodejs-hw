@@ -55,12 +55,14 @@ app.use((_req, res) => {
 
 
 // Middleware для обробки помилок
-app.use((error, req, res, next) => {
-  console.error(error);
 
-  res.status(500).json({ message: 'Something went wrong. Please try again later.' });
+app.use((err, _req, res, _next) => {
+  console.error('Error:', err.message);
+  res.status(500).json({
+    message: 'Something went wrong. Please try again later.',
+    error: err.message,
+  });
 });
-
 
 app.listen(PORT, () => {
   console.log(`Server is running on port ${PORT}`);
