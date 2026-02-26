@@ -4,8 +4,43 @@ import createHttpError from 'http-errors';
 
 // GET /notes
 export const getAllNotes = async (req, res) => {
-  const notes = await Note.find();
-  res.status(200).json(notes);
+  const {
+    page = 1,
+    perPage = 15,
+    tag,
+    search,
+  sortBy = "_id",
+    sortOrder = "asc",} = req.query;
+  const skip = (page - 1) * perPage;
+
+  const notesQuery = Note.find();
+
+if (search) {
+    notesQuery.where({ $text: { $search: search } });
+  }
+  // Будуємо фільтр
+  if (tag) {
+    notesQuery.where("tag").equals(tag);
+  }
+
+
+  const [totalNotes, notes] = await Promise.all([
+    notesQuery.clone().countDocuments(),
+    notesQuery
+      .skip(skip)
+      .limit(perPage)
+     .sort({ [sortBy]: sortOrder }),
+  ]);
+
+  const totalPages = Math.ceil(totalNotes / perPage);
+
+  res.status(200).json({
+    page,
+    perPage,
+    totalNotes,
+    totalPages,
+    notes,
+  });
 };
 // GET /notes/:noteId
 export const getNoteById = async (req, res) => {
