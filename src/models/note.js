@@ -1,7 +1,6 @@
 import { Schema, model } from 'mongoose';
 import { TAGS } from '../constants/tags.js';
 
-
 const noteSchema = new Schema(
   {
     title: {
@@ -11,12 +10,18 @@ const noteSchema = new Schema(
     },
     content: {
       type: String,
+      required: false, // додано для ясності
       default: '',
       trim: true,
     },
     tag: {
       type: String,
       enum: TAGS,
+      default: 'Todo',
+    },
+    userId: {
+      type: Schema.Types.ObjectId,
+      ref: "User",
       required: true,
     },
   },
@@ -25,13 +30,15 @@ const noteSchema = new Schema(
     versionKey: false,
   }
 );
+
+
 noteSchema.index(
-  { name: "text" },
+  { title: 'text', content: 'text' },
   {
-    name: "NoteTextIndex",
-    weights: { name: 10 },
-    default_language: "english",
+    name: 'NoteTextIndex',
+    weights: { title: 10, content: 5 },
+    default_language: 'english',
   }
 );
 
-export const Note = model('Note', noteSchema );
+export const Note = model('Note', noteSchema);

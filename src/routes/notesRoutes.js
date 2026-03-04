@@ -14,8 +14,10 @@ import {
   deleteNote,
   updateNote,
 } from '../controllers/notesController.js';
+import { authenticate } from "../middleware/authenticate.js";
 
 const router = Router();
+router.use("/notes", authenticate);
 
 router.get(
   '/notes',
