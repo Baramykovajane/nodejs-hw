@@ -2,7 +2,7 @@
 import createHttpError from 'http-errors';
 import { Session } from '../models/session.js';
 import { User } from '../models/user.js';
-import { Note } from '../models/note.js';
+
 
 export const authenticate = async (req, res, next) => {
 
@@ -36,11 +36,4 @@ req.user = user;
 
  next();
 };
-export const createNote = async (req, res) => {
-  const note = await Note.create({
-    ...req.body,
-    userId: req.user._id,
-  });
 
-  res.status(201).json(note);
-};
