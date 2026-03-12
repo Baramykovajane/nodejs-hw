@@ -17,7 +17,13 @@ export async function saveFileToCloudinary(buffer) {
         overwrite: true,
         unique_filename: true,
       },
-      (err, result) => (err ? reject(err) : resolve(result)),
+      (error, result) => {
+        if (error) {
+          reject(error);
+        } else {
+          resolve(result);
+        }
+      },
     );
 
     Readable.from(buffer).pipe(uploadStream);
