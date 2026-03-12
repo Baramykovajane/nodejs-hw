@@ -5,8 +5,14 @@ const userSchema = new Schema(
  {
  username: { type: String, trim: true },
  email: { type: String, unique: true, required: true, trim: true },
- password: { type: String,  minlength: 8, required: true },
- },
+    password: { type: String, minlength: 8, required: true },
+  avatar: {
+      type: String,
+      required: false,
+      default: "https://ac.goit.global/fullstack/react/default-avatar.jpg",
+    },
+  },
+
  { timestamps: true },
 );
 
